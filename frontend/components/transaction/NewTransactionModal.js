@@ -7,10 +7,10 @@ const NewTransactionModal = ({ modalOpen, setModalOpen}) => {
     const [amount, setAmount] = useState(0)
     const [receiver, setReceiver] = useState('')
     const [transactionPurpose, setTransactionPurpose] = useState('')
-
+    // const mintPublicKey = new PublicKey(mintAddresss)
 
     // const { amount, setAmount, receiver, setReceiver, transactionPurpose, setTransactionPurpose, doTransaction } = useCashApp()
-    const { doTransaction } = useCashApp()
+    const { doTransaction , makeTransaction} = useCashApp()
     const onAmountInput = (e) => {
         e.preventDefault()
         const newAmount = e.target.value
@@ -37,6 +37,9 @@ const NewTransactionModal = ({ modalOpen, setModalOpen}) => {
     const onPay = async () => {
         // Pay and add transaction funcationallity goes here!
         await doTransaction({amount, receiver, transactionPurpose }) 
+        // await makeTransaction({fromWallet, toWallet, amount, reference })
+
+        // await makeTransaction({ })
       
         // Clear states
         setModalOpen(false) 

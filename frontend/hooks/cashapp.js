@@ -75,14 +75,69 @@ export const useCashApp = () => {
     
     // Create the function to RUN the transaction. This will added to the button 
     const doTransaction = async ({ amount, receiver, transactionPurpose }) => {
-       const fromWallet = publicKey 
+
+        // const network = WalletAdapterNetwork.Devnet 
+        // const endpoint = clusterApiUrl(network) 
+        // const connection = new Connection(endpoint) 
+
+        // // Get a recent blockchash to include in the transaction 
+        // const {blockhash} = await connection.getLatestBlockhash('finalized') 
+
+        // const transaction = new Transaction({ 
+        //   recentBlockhash: blockhash, 
+        //   // The buyer pays the transaction fee 
+        //   feePayer: fromWallet 
+        // }) 
+
+        // // Create the instruction to send Sol from owner to receipent 
+        // const transferInstruction = SystemProgram.transfer({ 
+        //     fromPubkey: publicKey, 
+        //     lamports: amount.multipliedBy(LAMPORTS_PER_SOL).toNumber(),
+        //     toPubKey: toWallet, 
+        // })
+
+        /// demo 
+       const fromWallet = publicKey
+       console.log("FROM WALLET :-- ", fromWallet) 
        
     //    console.log('RECIEVER:--', receivers) 
-       const toWallet = new PublicKey(receiver.toString()) 
+       const toWallet = new PublicKey(receiver) 
+
+       console.log("TO WALLET ", toWallet) 
+
+       const {blockhash} = await connection.getLatestBlockhash('finalized') 
+
+
+       const transaction = new Transaction({ 
+        recentBlockhash: blockhash, 
+        // The buyer pays the transaction fee 
+        feePayer: fromWallet 
+      }) 
+ 
+
+      console.log("AMOUNTS AMOUNTS:-- ", amount) 
+      // Create the instruction to send Sol from owner to receipent 
+      const transferInstruction = SystemProgram.transfer({ 
+          fromPubkey: fromWallet, 
+        //   lamports: amount.multipliedBy(LAMPORTS_PER_SOL).toNumber(),
+          lamports: amount,
+          toPubKey: toWallet, 
+      })
+
+      transferInstruction.keys.push({
+        pubkey: reference, 
+        isSigner: false, 
+        isWritable: false, 
+     })
+
+    //   transaction.add(transferInstruction) 
+    //   return transaction 
+
+
      
-       const bnAmount = new BigNumber(amount) 
+    //    const bnAmount = new BigNumber(amount) 
        const reference = Keypair.generate().publicKey 
-       const transaction = await makeTransaction(fromWallet,"5hn6qMeBbw8jTjUi1q5DSgK7Ptf8uLH1T9wk5Zm11mSK", bnAmount, reference) 
+    //    const transaction = await makeTransaction(fromWallet,"5hn6qMeBbw8jTjUi1q5DSgK7Ptf8uLH1T9wk5Zm11mSK", bnAmount, reference) 
 
        const txHash = await sendTransaction(transaction, connection) 
        console.log(txHash) 
@@ -103,7 +158,7 @@ export const useCashApp = () => {
             avatar: getAvatarUrl(receiver.toString()), 
             verified: false, 
           }, 
-          description: transactionnPurpose, 
+          description: transactionPurpose, 
           transactionDate: new Date(),
           status: 'Completed',
           amount: amount,
