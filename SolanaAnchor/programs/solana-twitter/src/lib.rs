@@ -156,6 +156,7 @@ pub mod memelife {
         Ok(())
     }
 }
+
 #[derive(Accounts)]
 pub struct Deposit<'info> {
     // Existing accounts
